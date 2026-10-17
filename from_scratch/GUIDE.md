@@ -125,7 +125,7 @@ PowerShell from its profile menu). From the repository root, the full reference
 suite is:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests -q
+python -m pytest from_scratch\tests -q
 ```
 
 ### Keep your implementation separate
@@ -157,7 +157,7 @@ pytest as a Python module from the repository root so that the root is
 importable:
 
 ```powershell
-py -3.11 -m pytest my_tinysam\tests\test_numpy_gradcheck.py `
+python -m pytest my_tinysam\tests\test_numpy_gradcheck.py `
   -k test_every_numpy_layer_input_and_parameter_gradients -q
 ```
 
@@ -193,7 +193,7 @@ Hints:
 Test and reference:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_warmup.py `
+python -m pytest from_scratch\tests\test_warmup.py `
   -k test_perceptron_learns_separable_data_without_mistakes -q
 ```
 
@@ -221,9 +221,9 @@ Hints:
 Test and reference:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_warmup.py `
+python -m pytest from_scratch\tests\test_warmup.py `
   -k test_knn_distances_match_brute_force_and_training_one_nn_is_exact -q
-py -3.11 -m pytest from_scratch\tests\test_warmup.py `
+python -m pytest from_scratch\tests\test_warmup.py `
   -k test_knn_vote_ties_choose_smallest_label -q
 ```
 
@@ -253,7 +253,7 @@ Hints:
 Tests and reference:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_warmup.py `
+python -m pytest from_scratch\tests\test_warmup.py `
   -k test_power_iteration_matches_svd_and_reconstruction_error_falls -q
 python from_scratch\warmup\pca_svd.py --pets
 ```
@@ -320,7 +320,7 @@ Download/build the 64-pixel cache and run the synthetic prompt tests:
 
 ```powershell
 python from_scratch\scripts\download_data.py --size 64
-py -3.11 -m pytest from_scratch\tests\test_data.py -q
+python -m pytest from_scratch\tests\test_data.py -q
 ```
 
 The tests prove point labels/padding, box corner labels, and seeded sampling.
@@ -352,7 +352,7 @@ Hints:
 Test and reference:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py `
+python -m pytest from_scratch\tests\test_numpy_gradcheck.py `
   -k test_every_numpy_layer_input_and_parameter_gradients -q
 ```
 
@@ -374,7 +374,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Compute `dγ=Σ(dY⊙x̂)` and `dβ=ΣdY` over every axis except the final one, then compare the input derivative to centered finite differences. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.3 GELU and ReLU
@@ -392,7 +392,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Use `1−tanh(u)²` for the derivative of `tanh(u)` and multiply by `du/dx=c(1+3·0.044715x²)`. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.4 Stable softmax
@@ -409,7 +409,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Retain dimensions in the reduction so the scalar row correction broadcasts over classes. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_attention_and_softmax_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_attention_and_softmax_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.5 Multi-head attention
@@ -429,7 +429,7 @@ Hints:
 
 <details><summary>Hint 3</summary> After backpropagating through the output projection, split the context gradient into heads before calculating `dP`, `dV`, and `dS`. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_attention_and_softmax_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_attention_and_softmax_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.6 MLP
@@ -447,7 +447,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Parameter names should remain dotted and stable (for example, `fc1.weight`) so weight conversion and the full-model tests can find them. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.7 Patch embedding
@@ -465,7 +465,7 @@ Hints:
 
 <details><summary>Hint 3</summary> The final backward reshape must exactly invert the forward axes. Verify with an asymmetric image shape in your own small test before the square model. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.8 UpsampleConvT2x and LayerNorm2d
@@ -485,7 +485,7 @@ Hints:
 
 <details><summary>Hint 3</summary> For `LayerNorm2d`, move or reduce over the channel axis only; keep each pixel's statistics independent. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_every_numpy_layer_input_and_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\layers.py`.
 
 ### 5.9 Finite-difference gradcheck utility
@@ -507,9 +507,9 @@ Hints:
 Tests that exercise it:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py `
+python -m pytest from_scratch\tests\test_numpy_gradcheck.py `
   -k test_every_numpy_layer_input_and_parameter_gradients -q
-py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py `
+python -m pytest from_scratch\tests\test_numpy_gradcheck.py `
   -k test_full_tinysam_total_loss_parameter_gradients -q
 ```
 
@@ -530,7 +530,7 @@ Hints:
 
 <details><summary>Hint 3</summary> The neck changes `D` to `E`, normalizes, applies a second `E→E` map, and normalizes again. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
 This checks the encoder parameters as part of TinySAM. Reference after
 passing/stuck: `from_scratch\tinysam\numpy_impl\model.py`.
 
@@ -551,7 +551,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Use the same encoding function for sparse prompts and patch-center dense positional encodings; make the padding branch explicit. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\model.py`.
 
 ### 5.12 TwoWayTransformer
@@ -570,7 +570,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Write one layer's forward and reverse pass in a diagram before composing multiple layers; reverse the sublayer order exactly in backward. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\model.py`.
 
 ### 5.13 MaskDecoder
@@ -589,7 +589,7 @@ Hints:
 
 <details><summary>Hint 3</summary> Return `(B,K,4Hp,4Hp)` logits and `(B,K)` IoU predictions; verify both shapes before debugging their gradients. </details>
 
-Test: `py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
+Test: `python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
 Reference after passing/stuck: `from_scratch\tinysam\numpy_impl\model.py`.
 
 ### 5.14 TinySAM and its loss
@@ -612,7 +612,7 @@ Hints:
 Test the assembled model:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py `
+python -m pytest from_scratch\tests\test_numpy_gradcheck.py `
   -k test_full_tinysam_total_loss_parameter_gradients -q
 ```
 
@@ -639,7 +639,7 @@ Hints:
 Test:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py `
+python -m pytest from_scratch\tests\test_numpy_gradcheck.py `
   -k test_losses_and_analytic_gradients -q
 ```
 
@@ -675,7 +675,7 @@ python from_scratch\scripts\train_numpy.py --epochs 1 --max-steps 1 `
 ```
 
 For gradient verification use
-`py -3.11 -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
+`python -m pytest from_scratch\tests\test_numpy_gradcheck.py -k test_full_tinysam_total_loss_parameter_gradients -q`.
 After the smoke run passes or you are fully stuck, compare with
 `from_scratch\tinysam\numpy_impl\optim.py` and
 `from_scratch\scripts\train_numpy.py`.
@@ -756,7 +756,7 @@ Hints:
 Run the parity test (forward outputs and every parameter gradient):
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_numpy_torch_parity.py `
+python -m pytest from_scratch\tests\test_numpy_torch_parity.py `
   -k test_numpy_and_torch_forward_and_all_parameter_gradients -q
 ```
 
@@ -764,7 +764,7 @@ The MAE checkpoint should contain only encoder tensors. The transfer test
 requires exact equality for every saved `image_encoder.*` tensor:
 
 ```powershell
-py -3.11 -m pytest from_scratch\tests\test_mae_transfer.py `
+python -m pytest from_scratch\tests\test_mae_transfer.py `
   -k test_mae_encoder_state_transfers_exactly -q
 ```
 
@@ -797,7 +797,7 @@ Use Colab for the larger `TORCH_SMALL` model. Open
 Free-tier session limits and disconnect behavior vary. Save or download
 checkpoints often, and remember that a disconnected runtime may lose local
 files. The notebook saves model weights and logs under
-`runs/pets-torch\`. Colab GPU timing has **not** been measured for this
+`runs/pets-torch/`. Colab GPU timing has **not** been measured for this
 project; do not quote the VM timings as GPU performance.
 
 The downloaded ZIP is named `tinysam-results.zip`. It contains paths beginning
@@ -837,7 +837,7 @@ checkpoint is the recommended demo there.
 
 - [ ] Show the model diagram and explain why this is a teaching-scale
       implementation, not a reproduction of SAM/EfficientSAM training.
-- [ ] Run `py -3.11 -m pytest from_scratch\tests -q`; show finite-difference
+- [ ] Run `python -m pytest from_scratch\tests -q`; show finite-difference
       and NumPy/PyTorch parity results.
 - [ ] Explain one forward equation and its backward derivative (Linear,
       LayerNorm, attention, or focal/Dice are good choices).
@@ -857,7 +857,7 @@ checkpoint is the recommended demo there.
 |---|---|
 | `py` is not found | Re-run the Python installer, enable **Add python.exe to PATH**, then open a new PowerShell window. `py -0p` lists discovered interpreters. |
 | `Activate.ps1` is blocked | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` in PowerShell, then activate `.venv` again. |
-| `ModuleNotFoundError` | `cd` to the repository root, activate `.venv`, choose `.venv\Scripts\python.exe` in VS Code, then run `py -3.11 -m pytest ...` rather than another Python installation. |
+| `ModuleNotFoundError` | `cd` to the repository root, activate `.venv`, choose `.venv\Scripts\python.exe` in VS Code, then run `python -m pytest ...` (inside the venv, `python` is the venv interpreter; `py -3.11` would bypass it). |
 | PyTorch download is large | The CPU wheel is a large download. Keep the CPU index URL, wait for pip to finish, and check `python -c "import torch; print(torch.cuda.is_available())"`; `False` is correct here. |
 | Gradio says the port is in use | Start with `--server-port 7861` and open `http://127.0.0.1:7861`. |
 | Git/Python reports long paths | Clone to a short location such as `C:\src\EfficientSAM`, avoid deeply nested folders, and enable Windows long-path support if necessary. |
