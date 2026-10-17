@@ -1,5 +1,7 @@
 # TinySAM, built from scratch
 
+> **Writing TinySAM yourself on Windows 10?** Start with the [step-by-step build guide](GUIDE.md).
+
 This is a teaching implementation of promptable segmentation. The model has
 two independent implementations: **NumPy**, with manually derived backward
 passes for every trainable layer, and **PyTorch**, whose custom layers use only
