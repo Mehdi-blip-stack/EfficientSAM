@@ -1,5 +1,17 @@
 *.pyc
 *.pyo
 *.pyd
+.venv/
 __py
 **/__pycache__/
+
+# Local editor settings and temporary files
+.codex/
+tmp/
+
+# Downloaded datasets and generated caches
+from_scratch/data/
+from_scratch/runs/
+
+# Ignore PDF page previews, while keeping the actual charts elsewhere
+/output/pdf/*.png

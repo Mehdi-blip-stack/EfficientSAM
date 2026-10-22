@@ -1,0 +1,7 @@
+# Keep reports and images unchanged
+*.pdf binary
+*.docx binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary

@@ -1,0 +1,8 @@
+numpy==2.5.4
+Pillow==13.0.0
+matplotlib==3.11.2
+pycocotools==2.0.11
+# PDF report generation
+reportlab==5.1.0
+# Editable Word report generation
+python-docx==1.2.0
