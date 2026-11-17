@@ -1,0 +1,75 @@
+resumed from epoch 400
+saved /content/drive/MyDrive/effsam_work/checkpoints/mae/encoder_final.pt
+loading annotations into memory...
+Done (t=0.09s)
+creating index...
+index created!
+targets: 5827 objects in 800 images, dropped {'crowd': 73, 'tiny': 13, 'vanished_at_256': 3}
+encoder load: <All keys matched successfully>
+[ft-sami] epoch 1/100 loss 1.9280 (mask 1.9233) 21.0s/epoch
+[ft-sami] epoch 6/100 loss 0.9627 (mask 0.9451) 19.7s/epoch
+[ft-sami] epoch 11/100 loss 0.8693 (mask 0.8492) 19.9s/epoch
+[ft-sami] epoch 16/100 loss 0.8173 (mask 0.7955) 20.8s/epoch
+[ft-sami] epoch 21/100 loss 0.7773 (mask 0.7546) 20.5s/epoch
+[ft-sami] epoch 26/100 loss 0.7441 (mask 0.7220) 19.8s/epoch
+[ft-sami] epoch 31/100 loss 0.7286 (mask 0.7053) 19.2s/epoch
+[ft-sami] epoch 36/100 loss 0.7056 (mask 0.6811) 19.1s/epoch
+[ft-sami] epoch 41/100 loss 0.6800 (mask 0.6564) 19.8s/epoch
+[ft-sami] epoch 46/100 loss 0.6618 (mask 0.6377) 19.9s/epoch
+[ft-sami] epoch 51/100 loss 0.6416 (mask 0.6174) 20.9s/epoch
+[ft-sami] epoch 56/100 loss 0.6219 (mask 0.5976) 20.5s/epoch
+[ft-sami] epoch 61/100 loss 0.6021 (mask 0.5776) 20.6s/epoch
+[ft-sami] epoch 66/100 loss 0.5854 (mask 0.5610) 19.2s/epoch
+[ft-sami] epoch 71/100 loss 0.5660 (mask 0.5417) 19.4s/epoch
+[ft-sami] epoch 76/100 loss 0.5561 (mask 0.5321) 20.0s/epoch
+[ft-sami] epoch 81/100 loss 0.5383 (mask 0.5148) 20.4s/epoch
+[ft-sami] epoch 86/100 loss 0.5329 (mask 0.5092) 20.4s/epoch
+[ft-sami] epoch 91/100 loss 0.5312 (mask 0.5073) 20.2s/epoch
+[ft-sami] epoch 96/100 loss 0.5238 (mask 0.5004) 19.6s/epoch
+[ft-sami] epoch 100/100 loss 0.5275 (mask 0.5037) 20.3s/epoch
+saved /content/drive/MyDrive/effsam_work/checkpoints/ft_sami/model_final.pt
+encoder load: <All keys matched successfully>
+[ft-mae] epoch 1/100 loss 1.9814 (mask 1.9771) 21.0s/epoch
+[ft-mae] epoch 6/100 loss 0.9551 (mask 0.9377) 20.6s/epoch
+[ft-mae] epoch 11/100 loss 0.8654 (mask 0.8457) 19.7s/epoch
+[ft-mae] epoch 16/100 loss 0.8146 (mask 0.7932) 19.7s/epoch
+[ft-mae] epoch 21/100 loss 0.7832 (mask 0.7608) 20.1s/epoch
+[ft-mae] epoch 26/100 loss 0.7523 (mask 0.7296) 20.2s/epoch
+[ft-mae] epoch 31/100 loss 0.7422 (mask 0.7184) 20.5s/epoch
+[ft-mae] epoch 36/100 loss 0.7138 (mask 0.6893) 20.5s/epoch
+[ft-mae] epoch 41/100 loss 0.6927 (mask 0.6693) 20.2s/epoch
+[ft-mae] epoch 46/100 loss 0.6732 (mask 0.6489) 19.4s/epoch
+[ft-mae] epoch 51/100 loss 0.6515 (mask 0.6277) 19.6s/epoch
+[ft-mae] epoch 56/100 loss 0.6352 (mask 0.6115) 19.7s/epoch
+[ft-mae] epoch 61/100 loss 0.6098 (mask 0.5864) 20.7s/epoch
+[ft-mae] epoch 66/100 loss 0.5980 (mask 0.5740) 20.1s/epoch
+[ft-mae] epoch 71/100 loss 0.5798 (mask 0.5561) 19.0s/epoch
+[ft-mae] epoch 76/100 loss 0.5701 (mask 0.5468) 20.1s/epoch
+[ft-mae] epoch 81/100 loss 0.5523 (mask 0.5290) 19.7s/epoch
+[ft-mae] epoch 86/100 loss 0.5476 (mask 0.5242) 20.2s/epoch
+[ft-mae] epoch 91/100 loss 0.5433 (mask 0.5197) 21.0s/epoch
+[ft-mae] epoch 96/100 loss 0.5371 (mask 0.5140) 19.9s/epoch
+[ft-mae] epoch 100/100 loss 0.5410 (mask 0.5181) 20.2s/epoch
+saved /content/drive/MyDrive/effsam_work/checkpoints/ft_mae/model_final.pt
+[ft-random] epoch 1/100 loss 2.0737 (mask 2.0706) 21.1s/epoch
+[ft-random] epoch 6/100 loss 0.9712 (mask 0.9539) 20.3s/epoch
+[ft-random] epoch 11/100 loss 0.8756 (mask 0.8567) 19.3s/epoch
+[ft-random] epoch 16/100 loss 0.8258 (mask 0.8054) 20.1s/epoch
+[ft-random] epoch 21/100 loss 0.7990 (mask 0.7780) 21.2s/epoch
+[ft-random] epoch 26/100 loss 0.7720 (mask 0.7506) 21.5s/epoch
+[ft-random] epoch 31/100 loss 0.7616 (mask 0.7399) 19.9s/epoch
+[ft-random] epoch 36/100 loss 0.7335 (mask 0.7103) 20.0s/epoch
+[ft-random] epoch 41/100 loss 0.7107 (mask 0.6879) 21.1s/epoch
+[ft-random] epoch 46/100 loss 0.6952 (mask 0.6720) 20.6s/epoch
+[ft-random] epoch 51/100 loss 0.6758 (mask 0.6532) 21.1s/epoch
+[ft-random] epoch 56/100 loss 0.6628 (mask 0.6396) 22.3s/epoch
+[ft-random] epoch 61/100 loss 0.6344 (mask 0.6113) 20.8s/epoch
+[ft-random] epoch 66/100 loss 0.6258 (mask 0.6016) 20.6s/epoch
+[ft-random] epoch 71/100 loss 0.6068 (mask 0.5826) 21.8s/epoch
+[ft-random] epoch 76/100 loss 0.5966 (mask 0.5729) 20.4s/epoch
+[ft-random] epoch 81/100 loss 0.5816 (mask 0.5585) 21.1s/epoch
+[ft-random] epoch 86/100 loss 0.5762 (mask 0.5525) 21.4s/epoch
+[ft-random] epoch 91/100 loss 0.5727 (mask 0.5489) 20.7s/epoch
+[ft-random] epoch 96/100 loss 0.5688 (mask 0.5454) 20.3s/epoch
+[ft-random] epoch 100/100 loss 0.5713 (mask 0.5480) 22.0s/epoch
+saved /content/drive/MyDrive/effsam_work/checkpoints/ft_random/model_final.pt

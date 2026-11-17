@@ -1,0 +1,17 @@
+{
+ "model": "effsam_s",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 26.413028,
+ "params_encoder_M": 22.353664,
+ "encoder_ms_median": 275.62942349959485,
+ "encoder_ms_p90": 285.5671565002922,
+ "decoder_ms_per_prompt_median": 5.115755824908774,
+ "peak_memory_MB": 1560.37890625,
+ "cuda_peak_MB": 935.2001953125,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}
