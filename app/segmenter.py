@@ -36,8 +36,10 @@ class Prediction:
 
 
 def available_models():
-    """Our fine-tuned checkpoints in app/weights/*.pt first, then the released EfficientSAM models."""
-    models = {f"Ours: {p.stem}": ("ours", p) for p in sorted(OURS_DIR.glob("*.pt"))}
+    """Our fine-tuned checkpoints in app/weights/*.pt first (the 5,000-image model, our best, at the top),
+    then the released EfficientSAM models."""
+    ours = sorted(OURS_DIR.glob("*.pt"), key=lambda p: (0 if "5k" in p.stem else 1, p.stem))
+    models = {f"Ours: {p.stem}": ("ours", p) for p in ours}
     for name, (fname, _, _) in RELEASED.items():
         w = REPO / "weights" / fname
         if w.exists() or (REPO / "weights" / (fname + ".zip")).exists():

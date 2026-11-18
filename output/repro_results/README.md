@@ -1,16 +1,26 @@
-# Reproduction results
+# Reproduction and experiment results
 
 Produced with `repro/` and `notebooks/EfficientSAM_Reproduction_Colab.ipynb`.
 Evaluation set: 1,620 non-crowd objects in 199 held-out COCO val2017 images, identical frozen prompts for every model.
 
 | Folder / file | Contents |
 |---|---|
-| `gpu_t4/` | All 11 models on a Colab T4 GPU: `per_instance_<model>.csv` (one row per object and model), `efficiency_<model>.json` (parameters, timing, memory), `eval_prompts.json` (the frozen prompts), `results_summary.md` and `results_tables.json` (all tables with 95% bootstrap CIs) |
+| `gpu_t4/` | All 26 models on Colab T4 GPUs: `per_instance_<model>.csv` (one row per object), `efficiency_<model>.json` (parameters, timing, memory), `eval_prompts.json` (the frozen prompts), `results_summary.md` and `results_tables.json` (all tables with 95% bootstrap CIs) |
 | `cpu_2threads/` | EfficientSAM-Ti, EfficientSAM-S and MobileSAM on a 2-thread CPU (accuracy identical to the GPU run; CPU timings) |
-| `figures/` | Report figures R1–R5 |
-| `tables.md` | Report tables R1–R6 |
-| `make_report_assets.py` | Rebuilds `figures/` and `tables.md`: `python make_report_assets.py gpu_t4 cpu_2threads logs/finetune_full_log.txt out` |
-| `logs/` | `pretrain_loss.csv` (SAMI and MAE loss every 10 epochs), `finetune_full_log.txt` (fine-tuning, encoder trained), `eval_sam_vit_h_log.txt` |
+| `figures/` | Report figures: R1–R5 (released models, reproduction, paired differences, training curves), `fig_r6_expC_*` (Experiment C), `fig_r7_labelled_data` (Experiments D and E), `fig_r8_expB_frozen` (Experiment B), `fig_r9_expD_few_labels` (Experiment D) |
+| `figure_scripts/` | The scripts that draw those figures from `gpu_t4/` |
+| `tables.md`, `make_report_assets.py` | Report tables R1–R6 and the script that builds them |
+| `logs/` | `pretrain_loss.csv` (SAMI and MAE loss every 10 epochs), `finetune_full_log.txt`, `eval_sam_vit_h_log.txt` |
 
-Model names: `effsam_ti`, `effsam_s`, `mobile_sam`, `sam_vit_b`, `sam_vit_h` (released checkpoints);
-`ours_{sami,mae,random}` (our students, encoder fine-tuned); `ours_{sami,mae,random}_frozen` (encoder frozen).
+**Model names**
+* Released checkpoints: `effsam_ti`, `effsam_s`, `mobile_sam`, `sam_vit_b`, `sam_vit_h`
+* Our students, `ours_{sami,mae,random}<suffix>`, where the suffix is the setting:
+
+| Suffix | Setting | Report section |
+|---|---|---|
+| (none) | 800 images, encoder fine-tuned, 100 epochs | 6.2 |
+| `_frozen` | 800 images, encoder frozen | 7.2 (Experiment B) |
+| `_short` | 800 images, 20 epochs | 7.3 (Experiment C) |
+| `_lowlr` | 800 images, encoder learning rate 1e-5 | 7.3 (Experiment C) |
+| `_n100`, `_n200` | only 100 / 200 labelled images, same number of steps | 7.4 (Experiment D) |
+| `_5k` | 5,000 images, same number of steps | 7.5 (Experiment E) |

@@ -1,0 +1,17 @@
+{
+ "model": "ours_mae_n100",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 10.223204,
+ "params_encoder_M": 6.16384,
+ "encoder_ms_median": 10.63346899991302,
+ "encoder_ms_p90": 15.234178999889991,
+ "decoder_ms_per_prompt_median": 2.1873525001107437,
+ "peak_memory_MB": 1550.8984375,
+ "cuda_peak_MB": 143.14990234375,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}

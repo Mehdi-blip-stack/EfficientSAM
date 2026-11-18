@@ -87,13 +87,14 @@ st.sidebar.caption(f"Running on: **{DEVICE.upper()}**")
 with st.sidebar.expander("About the models"):
     st.markdown(
         "**Ours**: EfficientSAM-Ti architecture (10.2 M parameters) at 256×256 px, encoder pretrained by us with "
-        "SAMI (SAM ViT-H as teacher) on 800 COCO images, then fine-tuned for box and click prompts on the same "
-        "images, on one Colab T4 GPU.\n\n"
+        "SAMI (SAM ViT-H as teacher) on 800 COCO images, then fine-tuned for box and click prompts on 800 images "
+        "(`SAMI_finetuned`) or 5,000 images (`SAMI_finetuned_5k`, our best), on Colab T4 GPUs.\n\n"
         "**Released**: the authors' EfficientSAM-Ti/S, trained on ImageNet-1K and SA-1B (11 M images) at "
         "1024×1024 px on 64 A100 GPUs.\n\n"
         "On our 1,620 held-out COCO objects (mIoU, box / click): released EfficientSAM-Ti 0.751 / 0.501, "
-        "-S 0.764 / 0.598; ours (SAMI start) 0.497 / 0.268 with the encoder fine-tuned and 0.487 / 0.257 "
-        "with it frozen. Expect coarser masks from our model, especially on small objects.")
+        "-S 0.764 / 0.598; ours (SAMI start) 0.577 / 0.313 with 5,000 fine-tuning images, 0.497 / 0.268 "
+        "with 800, and 0.487 / 0.257 with the encoder frozen. Expect coarser masks from our model, "
+        "especially on small objects.")
 
 # ------------------------------------------------------------------------------------------------ input image
 st.title("EfficientSAM: promptable segmentation demo")

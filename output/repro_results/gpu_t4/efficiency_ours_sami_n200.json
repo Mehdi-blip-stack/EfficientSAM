@@ -1,0 +1,17 @@
+{
+ "model": "ours_sami_n200",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 10.223204,
+ "params_encoder_M": 6.16384,
+ "encoder_ms_median": 10.367257499638072,
+ "encoder_ms_p90": 13.63409599980514,
+ "decoder_ms_per_prompt_median": 2.077133906141171,
+ "peak_memory_MB": 1564.28125,
+ "cuda_peak_MB": 143.14990234375,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}

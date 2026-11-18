@@ -113,7 +113,8 @@ def main():
     ap.add_argument("--lr_encoder", type=float, default=1e-4)
     ap.add_argument("--lr_decoder", type=float, default=3e-4)
     ap.add_argument("--seed", type=int, default=36219)
-    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--limit", type=int, default=0, help="use only the first N training images (and their masks)")
+    ap.add_argument("--save_every", type=int, default=1, help="save the resume checkpoint every N epochs")
     ap.add_argument("--freeze_encoder", action="store_true",
                     help="keep the pretrained patch embedding + ViT blocks fixed; train only the neck, prompt encoder "
                          "and mask decoder. Tests the quality of the pretrained FEATURES themselves.")
@@ -214,9 +215,10 @@ def main():
             scaler.step(opt); scaler.update(); sched.step()
             L.append(loss.item()); ML.append(mloss.item())
         log.append({"epoch": epoch, "loss": float(np.mean(L)), "mask_loss": float(np.mean(ML)), "sec": time.time() - t0})
-        torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "scaler": scaler.state_dict(),
-                    "epoch": epoch, "log": log, "gen": gen.get_state(), "args": vars(args)}, ck)
-        if epoch % 5 == 0 or epoch == args.epochs - 1:
+        if (epoch + 1) % args.save_every == 0 or epoch == args.epochs - 1:
+            torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "scaler": scaler.state_dict(),
+                        "epoch": epoch, "log": log, "gen": gen.get_state(), "args": vars(args)}, ck)
+        if epoch % max(5, args.epochs // 20) == 0 or epoch == args.epochs - 1:
             print(f"[ft-{args.init}{'-frozen' if args.freeze_encoder else ''}] epoch {epoch + 1}/{args.epochs} loss {log[-1]['loss']:.4f} "
                   f"(mask {log[-1]['mask_loss']:.4f}) {log[-1]['sec']:.1f}s/epoch", flush=True)
 

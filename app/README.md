@@ -27,9 +27,13 @@ Dependencies: `streamlit`, `streamlit-image-coordinates`, `torch`, `numpy`, `pil
 can see it.
 
 ## 2. Add the model weights
-* **Our trained model:** download our fine-tuned checkpoints (link: **TO DO**) and copy them into `app/weights/`,
-  e.g. `app/weights/SAMI_finetuned.pt` and `app/weights/SAMI_frozen_encoder.pt`. Every `*.pt` file there appears
-  in the model list as "Ours: <file name>".
+* **Our trained models:** download them from the GitHub releases and copy them into `app/weights/`:
+  * **[v1.1-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.1-weights)**:
+    `SAMI_finetuned_5k.pt`, fine-tuned on 5,000 images: **our best model**, listed first in the app
+  * **[v1.0-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.0-weights)**:
+    `SAMI_finetuned.pt` (800 images) and `SAMI_frozen_encoder.pt` (800 images, encoder frozen)
+
+  Every `*.pt` file in `app/weights/` appears in the model list as "Ours: <file name>".
 * **Released EfficientSAM:** already in the repository's `weights/` folder (`efficient_sam_vitt.pt`,
   `efficient_sam_vits.pt.zip`; the zip is extracted automatically the first time EfficientSAM-S is used).
 
@@ -54,22 +58,24 @@ The image encoder runs **once per image and model**; later prompts on the same i
 ("cached" under the encoder time), so only the fast decoder runs.
 
 ## 5. Example inference
-Example image "Cat, toilet and sink", one click on the toilet tank, released EfficientSAM-Ti vs -S, on a
-2-thread cloud CPU:
+Example image "Cat, toilet and sink", one click on the toilet tank, our model vs the released EfficientSAM-Ti in
+comparison mode, on our laptop's CPU (screenshots: report Figures 9 and 10):
 
-| | EfficientSAM-Ti (released) | EfficientSAM-S (released) |
+| | Ours: SAMI_finetuned | EfficientSAM-Ti (released) |
 |---|---|---|
-| Encoder (first prompt on the image) | 4,893 ms | 10,121 ms |
-| Decoder | 247 ms | 184 ms |
-| Predicted IoU of the shown mask | 0.85 | 0.97 |
-| Mask area | 4.8% of the image | 4.8% of the image |
-| Agreement between the two masks (IoU) | 0.98 | |
+| Parameters | 10.2 M | 10.2 M |
+| Encoder (first prompt on the image) | 146 ms | 4,903 ms |
+| Decoder (per prompt) | 48 ms | 139 ms |
+| Predicted IoU of the shown mask | 0.54 | 0.86 |
+| Mask area | 6.0% of the image | 4.7% of the image |
+| Agreement between the two masks (IoU) | 0.67 | |
 
-**TO DO:** the same example with our trained model, and a screenshot.
+Both models find the clicked object. Ours is about 33× faster because it works at 256 px, but its mask is
+coarser and has small stray regions.
 
-Our trained model works at 256×256 px, so its encoder is much faster, but its masks are coarser: on our
-1,620 held-out objects it reaches 0.50 box / 0.27 click mIoU, against 0.75 / 0.50 for the released
-EfficientSAM-Ti (report, Section 6).
+Our trained models work at 256×256 px, so their encoder is much faster, but their masks are coarser. On our
+1,620 held-out objects, mIoU (box / click) is 0.58 / 0.31 for `SAMI_finetuned_5k` and 0.50 / 0.27 for
+`SAMI_finetuned`, against 0.75 / 0.50 for the released EfficientSAM-Ti (report, Sections 6 and 7.5).
 
 ## Files
 | File | Purpose |

@@ -24,10 +24,15 @@ NAMES = {"effsam_ti": "EfficientSAM-Ti", "effsam_s": "EfficientSAM-S", "mobile_s
          "ours_sami": "Ours: SAMI init", "ours_mae": "Ours: MAE init", "ours_random": "Ours: random init",
          "ours_sami_frozen": "Ours: SAMI frozen", "ours_mae_frozen": "Ours: MAE frozen", "ours_random_frozen": "Ours: random frozen",
          "ours_sami_lowlr": "Ours: SAMI low enc. LR", "ours_mae_lowlr": "Ours: MAE low enc. LR", "ours_random_lowlr": "Ours: random low enc. LR",
-         "ours_sami_short": "Ours: SAMI 20 epochs", "ours_mae_short": "Ours: MAE 20 epochs", "ours_random_short": "Ours: random 20 epochs"}
+         "ours_sami_short": "Ours: SAMI 20 epochs", "ours_mae_short": "Ours: MAE 20 epochs", "ours_random_short": "Ours: random 20 epochs",
+         "ours_sami_n100": "Ours: SAMI 100 labelled img", "ours_mae_n100": "Ours: MAE 100 labelled img", "ours_random_n100": "Ours: random 100 labelled img",
+         "ours_sami_n200": "Ours: SAMI 200 labelled img", "ours_mae_n200": "Ours: MAE 200 labelled img", "ours_random_n200": "Ours: random 200 labelled img",
+         "ours_sami_5k": "Ours: SAMI 5k labelled img", "ours_mae_5k": "Ours: MAE 5k labelled img", "ours_random_5k": "Ours: random 5k labelled img"}
 ORDER = ["effsam_ti", "effsam_s", "mobile_sam", "sam_vit_b", "sam_vit_h", "ours_sami", "ours_mae", "ours_random",
          "ours_sami_frozen", "ours_mae_frozen", "ours_random_frozen",
-         "ours_sami_lowlr", "ours_mae_lowlr", "ours_random_lowlr", "ours_sami_short", "ours_mae_short", "ours_random_short"]
+         "ours_sami_lowlr", "ours_mae_lowlr", "ours_random_lowlr", "ours_sami_short", "ours_mae_short", "ours_random_short",
+         "ours_sami_n100", "ours_mae_n100", "ours_random_n100", "ours_sami_n200", "ours_mae_n200", "ours_random_n200",
+         "ours_sami_5k", "ours_mae_5k", "ours_random_5k"]
 N_BOOT, MIN_CAT = 2000, 10
 rng = np.random.default_rng(36220)
 
@@ -140,7 +145,13 @@ def main():
                                      ("ours_sami_lowlr", "ours_mae_lowlr"), ("ours_sami_lowlr", "ours_random_lowlr"),
                                      ("ours_mae_lowlr", "ours_random_lowlr"), ("ours_sami_lowlr", "ours_sami"),
                                      ("ours_sami_short", "ours_mae_short"), ("ours_sami_short", "ours_random_short"),
-                                     ("ours_mae_short", "ours_random_short"), ("ours_sami_short", "ours_sami")]
+                                     ("ours_mae_short", "ours_random_short"), ("ours_sami_short", "ours_sami"),
+                                     ("ours_sami_n100", "ours_mae_n100"), ("ours_sami_n100", "ours_random_n100"),
+                                     ("ours_mae_n100", "ours_random_n100"),
+                                     ("ours_sami_n200", "ours_mae_n200"), ("ours_sami_n200", "ours_random_n200"),
+                                     ("ours_mae_n200", "ours_random_n200"),
+                                     ("ours_sami_5k", "ours_mae_5k"), ("ours_sami_5k", "ours_random_5k"),
+                                     ("ours_mae_5k", "ours_random_5k"), ("ours_sami_5k", "ours_sami")]
                  if a in models and b in models]
         for a, b in pairs:
             d = {mode: paired_diff(data[a], data[b], f"{mode}_iou") for mode in ["box", "click"]}
@@ -165,7 +176,7 @@ def main():
     # ---- Figures ----
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True,
                          "grid.color": "#e4e3df", "axes.axisbelow": True, "legend.frameon": False, "savefig.dpi": 200})
-    col = dict(zip(ORDER, ["#2a78d6", "#1baf7a", "#eb6834", "#6250d6", "#52514e", "#e34948", "#eda100", "#888888", "#a02c2c", "#a87200", "#444444", "#f08a89", "#f5c95c", "#bbbbbb", "#c45a5a", "#c99a2e", "#666666"]))
+    col = dict(zip(ORDER, ["#2a78d6", "#1baf7a", "#eb6834", "#6250d6", "#52514e", "#e34948", "#eda100", "#888888", "#a02c2c", "#a87200", "#444444", "#f08a89", "#f5c95c", "#bbbbbb", "#c45a5a", "#c99a2e", "#666666", "#ff7b7a", "#ffd166", "#cfcfcf", "#d9534f", "#e0b040", "#999999", "#b22222", "#c08000", "#555555"]))
     fig, ax = plt.subplots(1, 2, figsize=(9, 3.6), sharex=True)
     for a, mode in zip(ax, ["box", "click"]):
         for m in models:
