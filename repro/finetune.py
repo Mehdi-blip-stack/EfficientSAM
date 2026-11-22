@@ -174,7 +174,7 @@ def main():
     if ck.exists():
         s = torch.load(ck, map_location=dev)
         model.load_state_dict(s["model"]); opt.load_state_dict(s["opt"]); sched.load_state_dict(s["sched"])
-        scaler.load_state_dict(s["scaler"]); start, log = s["epoch"] + 1, s["log"]; gen.set_state(s["gen"])
+        scaler.load_state_dict(s["scaler"]); start, log = s["epoch"] + 1, s["log"]; gen.set_state(s["gen"].cpu())
         print(f"resumed from epoch {start}")
 
     for epoch in range(start, args.epochs):

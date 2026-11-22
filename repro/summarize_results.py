@@ -27,12 +27,13 @@ NAMES = {"effsam_ti": "EfficientSAM-Ti", "effsam_s": "EfficientSAM-S", "mobile_s
          "ours_sami_short": "Ours: SAMI 20 epochs", "ours_mae_short": "Ours: MAE 20 epochs", "ours_random_short": "Ours: random 20 epochs",
          "ours_sami_n100": "Ours: SAMI 100 labelled img", "ours_mae_n100": "Ours: MAE 100 labelled img", "ours_random_n100": "Ours: random 100 labelled img",
          "ours_sami_n200": "Ours: SAMI 200 labelled img", "ours_mae_n200": "Ours: MAE 200 labelled img", "ours_random_n200": "Ours: random 200 labelled img",
-         "ours_sami_5k": "Ours: SAMI 5k labelled img", "ours_mae_5k": "Ours: MAE 5k labelled img", "ours_random_5k": "Ours: random 5k labelled img"}
+         "ours_sami_5k": "Ours: SAMI 5k labelled img", "ours_mae_5k": "Ours: MAE 5k labelled img", "ours_random_5k": "Ours: random 5k labelled img",
+         "ours_sami_5k_e100": "Ours: SAMI 5k img 100 ep", "ours_mae_5k_e100": "Ours: MAE 5k img 100 ep", "ours_random_5k_e100": "Ours: random 5k img 100 ep"}
 ORDER = ["effsam_ti", "effsam_s", "mobile_sam", "sam_vit_b", "sam_vit_h", "ours_sami", "ours_mae", "ours_random",
          "ours_sami_frozen", "ours_mae_frozen", "ours_random_frozen",
          "ours_sami_lowlr", "ours_mae_lowlr", "ours_random_lowlr", "ours_sami_short", "ours_mae_short", "ours_random_short",
          "ours_sami_n100", "ours_mae_n100", "ours_random_n100", "ours_sami_n200", "ours_mae_n200", "ours_random_n200",
-         "ours_sami_5k", "ours_mae_5k", "ours_random_5k"]
+         "ours_sami_5k", "ours_mae_5k", "ours_random_5k", "ours_sami_5k_e100", "ours_mae_5k_e100", "ours_random_5k_e100"]
 N_BOOT, MIN_CAT = 2000, 10
 rng = np.random.default_rng(36220)
 
@@ -73,7 +74,8 @@ def paired_diff(rows_a, rows_b, key):
 def main():
     models = [m for m in ORDER if (OUT / f"per_instance_{m}.csv").exists()]
     data = {m: load(m) for m in models}
-    eff = {m: json.load(open(OUT / f"efficiency_{m}.json")) for m in models}
+    eff = {m: json.load(open(OUT / f"efficiency_{m}.json")) for m in models
+           if (OUT / f"efficiency_{m}.json").exists()}          # timing files are optional (same architecture)
     ids = [set(r["ann_id"] for r in data[m]) for m in models]
     assert all(s == ids[0] for s in ids), "models were evaluated on different objects"
     f = lambda t: f"{t[0]:.3f} [{t[1]:.3f}, {t[2]:.3f}]"
@@ -151,7 +153,11 @@ def main():
                                      ("ours_sami_n200", "ours_mae_n200"), ("ours_sami_n200", "ours_random_n200"),
                                      ("ours_mae_n200", "ours_random_n200"),
                                      ("ours_sami_5k", "ours_mae_5k"), ("ours_sami_5k", "ours_random_5k"),
-                                     ("ours_mae_5k", "ours_random_5k"), ("ours_sami_5k", "ours_sami")]
+                                     ("ours_mae_5k", "ours_random_5k"), ("ours_sami_5k", "ours_sami"),
+                                     ("ours_sami_5k_e100", "ours_mae_5k_e100"), ("ours_sami_5k_e100", "ours_random_5k_e100"),
+                                     ("ours_mae_5k_e100", "ours_random_5k_e100"), ("ours_sami_5k_e100", "ours_sami_5k"),
+                                     ("ours_mae_5k_e100", "ours_mae_5k"), ("ours_random_5k_e100", "ours_random_5k"),
+                                     ("ours_sami_5k_e100", "ours_sami")]
                  if a in models and b in models]
         for a, b in pairs:
             d = {mode: paired_diff(data[a], data[b], f"{mode}_iou") for mode in ["box", "click"]}
@@ -160,10 +166,10 @@ def main():
               f"{d['click'][0]:+.3f} [{d['click'][1]:+.3f}, {d['click'][2]:+.3f}] |")
 
     # ---- Table F: efficiency ----
-    e0 = eff[models[0]]
+    e0 = eff[next(m for m in models if m in eff)]
     w(f"\n## F. Efficiency ({e0['device'].upper()}, {e0['threads']} threads, PyTorch {e0['torch']}, batch size 1)\n")
     w("| Model | Params total (M) | Params encoder (M) | Encoder ms/image (median) | Decoder ms/prompt (median) | Peak process memory (MB) |\n|---|---|---|---|---|---|")
-    for m in models:
+    for m in [m for m in models if m in eff]:
         e = eff[m]
         w(f"| {NAMES[m]} | {e['params_total_M']:.2f} | {e['params_encoder_M']:.2f} | {e['encoder_ms_median']:.0f} | "
           f"{e['decoder_ms_per_prompt_median']:.0f} | {e['peak_memory_MB']:.0f} |")
@@ -176,10 +182,10 @@ def main():
     # ---- Figures ----
     plt.rcParams.update({"font.size": 9, "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True,
                          "grid.color": "#e4e3df", "axes.axisbelow": True, "legend.frameon": False, "savefig.dpi": 200})
-    col = dict(zip(ORDER, ["#2a78d6", "#1baf7a", "#eb6834", "#6250d6", "#52514e", "#e34948", "#eda100", "#888888", "#a02c2c", "#a87200", "#444444", "#f08a89", "#f5c95c", "#bbbbbb", "#c45a5a", "#c99a2e", "#666666", "#ff7b7a", "#ffd166", "#cfcfcf", "#d9534f", "#e0b040", "#999999", "#b22222", "#c08000", "#555555"]))
+    col = dict(zip(ORDER, ["#2a78d6", "#1baf7a", "#eb6834", "#6250d6", "#52514e", "#e34948", "#eda100", "#888888", "#a02c2c", "#a87200", "#444444", "#f08a89", "#f5c95c", "#bbbbbb", "#c45a5a", "#c99a2e", "#666666", "#ff7b7a", "#ffd166", "#cfcfcf", "#d9534f", "#e0b040", "#999999", "#b22222", "#c08000", "#555555", "#8b0000", "#8a6400", "#333333"]))
     fig, ax = plt.subplots(1, 2, figsize=(9, 3.6), sharex=True)
     for a, mode in zip(ax, ["box", "click"]):
-        for m in models:
+        for m in [m for m in models if m in eff]:
             v = T["overall"][f"{m}|{mode}"]["iou"]; x = eff[m]["encoder_ms_median"] / 1000
             a.errorbar(x, v[0], yerr=[[v[0] - v[1]], [v[2] - v[0]]], fmt="o", ms=7, color=col[m], capsize=3)
             a.annotate(f"{NAMES[m]}\n{eff[m]['params_total_M']:.1f} M params", (x, v[0]), xytext=(8, -4), textcoords="offset points", fontsize=8)

@@ -28,8 +28,10 @@ can see it.
 
 ## 2. Add the model weights
 * **Our trained models:** download them from the GitHub releases and copy them into `app/weights/`:
+  * **[v1.2-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.2-weights)**:
+    `SAMI_finetuned_5k_e100.pt`, fine-tuned on 5,000 images for 100 epochs: **our best model**, listed first in the app
   * **[v1.1-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.1-weights)**:
-    `SAMI_finetuned_5k.pt`, fine-tuned on 5,000 images: **our best model**, listed first in the app
+    `SAMI_finetuned_5k.pt`, fine-tuned on 5,000 images for 16 epochs
   * **[v1.0-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.0-weights)**:
     `SAMI_finetuned.pt` (800 images) and `SAMI_frozen_encoder.pt` (800 images, encoder frozen)
 
@@ -74,8 +76,8 @@ Both models find the clicked object. Ours is about 33× faster because it works 
 coarser and has small stray regions.
 
 Our trained models work at 256×256 px, so their encoder is much faster, but their masks are coarser. On our
-1,620 held-out objects, mIoU (box / click) is 0.58 / 0.31 for `SAMI_finetuned_5k` and 0.50 / 0.27 for
-`SAMI_finetuned`, against 0.75 / 0.50 for the released EfficientSAM-Ti (report, Sections 6 and 7.5).
+1,620 held-out objects, mIoU (box / click) is 0.61 / 0.34 for `SAMI_finetuned_5k_e100`, 0.58 / 0.31 for `SAMI_finetuned_5k` and
+0.50 / 0.27 for `SAMI_finetuned`, against 0.75 / 0.50 for the released EfficientSAM-Ti (report, Sections 6, 7.5 and 7.6).
 
 ## Files
 | File | Purpose |

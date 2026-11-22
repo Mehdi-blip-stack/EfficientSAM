@@ -55,21 +55,27 @@ three environment variables: `COCO_DATA_ROOT` (our COCO subset), `REPRO_OUT` (re
 | C: gentler fine-tuning | 800 images, encoder LR 1e-5 | 0.476 / 0.253 | 0.486 / 0.252 | 0.496 / 0.242 |
 | D: fewer labels | 100 labelled images | 0.151 / 0.101 | 0.159 / 0.105 | 0.190 / 0.110 |
 | D: fewer labels | 200 labelled images | 0.241 / 0.140 | 0.243 / 0.139 | 0.275 / 0.144 |
-| E: more data | 5,000 images | **0.577 / 0.313** | 0.571 / 0.308 | 0.568 / 0.297 |
+| E: more data | 5,000 images, 16 epochs | 0.577 / 0.313 | 0.571 / 0.308 | 0.568 / 0.297 |
+| F: longer training | 5,000 images, 100 epochs | **0.611 / 0.341** | 0.612 / 0.348 | 0.613 / 0.346 |
 
 Key findings:
 * With the encoder **frozen**, SAMI beats MAE on single clicks by +0.031 [95% CI +0.019, +0.043]; full fine-tuning
   on 800 images erases this, and a 20-epoch fine-tuning keeps part of it (+0.012).
 * **More data is the strongest lever:** 5,000 instead of 800 images raises the SAMI student by +0.080 box mIoU, and
   SAMI becomes the best start (SAMI > MAE > random, as in the paper).
+* **Longer training (Experiment F):** 100 instead of 16 epochs on 5,000 images adds +0.033 to +0.045 box mIoU to
+  every student, but then all three starts are tied (SAMI − MAE −0.001 [−0.005, +0.003]): SAMI's lead in
+  Experiment E was a faster start, not a better end point.
 * With only **100 or 200 labelled images**, pretraining does not help: the random start is best on boxes.
 
 Full tables, confidence intervals and timings: `output/repro_results/gpu_t4/results_summary.md`.
 
 ## Trained weights
 Checkpoints are not stored in git (≈40 MB each). Download them from the GitHub releases:
+* **[v1.2-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.2-weights)**:
+  `SAMI_finetuned_5k_e100.pt`, SAMI-pretrained encoder fine-tuned on 5,000 images for 100 epochs (`checkpoints/ft_sami_5k_e100`), **our best model**
 * **[v1.1-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.1-weights)**:
-  `SAMI_finetuned_5k.pt`, SAMI-pretrained encoder fine-tuned on 5,000 images (`checkpoints/ft_sami_5k`), **our best model**
+  `SAMI_finetuned_5k.pt`, SAMI-pretrained encoder fine-tuned on 5,000 images for 16 epochs (`checkpoints/ft_sami_5k`)
 * **[v1.0-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.0-weights)**:
   `SAMI_finetuned.pt`, fully fine-tuned on 800 images (`checkpoints/ft_sami`), and
   `SAMI_frozen_encoder.pt`, encoder kept frozen (`checkpoints/ft_sami_frozen`)
@@ -91,6 +97,10 @@ model.eval()   # input: RGB image resized to 256x256, values in [0, 1]
 * Experiment D: `--limit` documented and `--save_every` added to `finetune.py` (saving every epoch is the default,
   so earlier runs are unaffected); run names `*_n100`, `*_n200`.
 * Experiment E: `prepare_5k.py` added; run names `*_5k`.
+* Experiment F: run names `*_5k_e100`. Fixed resuming in `finetune.py`: the saved random-generator state is moved
+  back to the CPU before it is restored (`gen.set_state(s["gen"].cpu())`); before, resuming on a GPU failed with
+  "RNG state must be a torch.ByteTensor". It does not change results. `summarize_results.py` now skips models
+  without an `efficiency_<model>.json` in the timing table and figure.
 
 The training and evaluation logic is the same code that produced every result in `output/repro_results/`.
 Earlier versions are not kept separately: git history records every change from here on.

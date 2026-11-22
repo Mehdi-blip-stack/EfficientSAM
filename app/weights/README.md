@@ -1,7 +1,9 @@
 Put our fine-tuned checkpoints here (`*.pt`). Download them from the GitHub releases:
 
+* [v1.2-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.2-weights):
+  `SAMI_finetuned_5k_e100.pt`, fine-tuned on 5,000 COCO images for 100 epochs (**our best model; the app selects it first**)
 * [v1.1-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.1-weights):
-  `SAMI_finetuned_5k.pt`, fine-tuned on 5,000 COCO images (**our best model; the app selects it first**)
+  `SAMI_finetuned_5k.pt`, fine-tuned on 5,000 COCO images for 16 epochs
 * [v1.0-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.0-weights):
   `SAMI_finetuned.pt` (800 images) and `SAMI_frozen_encoder.pt` (800 images, encoder frozen)
 
