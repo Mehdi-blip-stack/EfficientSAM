@@ -1,0 +1,27 @@
+loading annotations into memory...
+Done (t=0.02s)
+creating index...
+index created!
+/usr/local/lib/python3.13/dist-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+/usr/local/lib/python3.13/dist-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+/usr/local/lib/python3.13/dist-packages/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_5m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/usr/local/lib/python3.13/dist-packages/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_11m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/usr/local/lib/python3.13/dist-packages/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/usr/local/lib/python3.13/dist-packages/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_384 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+/usr/local/lib/python3.13/dist-packages/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_512 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+  return register_model(fn_wrapper)
+  mobile_sam: 25/199 images, 84s
+  mobile_sam: 50/199 images, 160s
+  mobile_sam: 75/199 images, 239s
+  mobile_sam: 100/199 images, 325s
+  mobile_sam: 125/199 images, 413s
+  mobile_sam: 150/199 images, 508s
+  mobile_sam: 175/199 images, 591s
+{"model": "mobile_sam", "device": "cpu", "cpu": "x86_64", "threads": 2, "torch": "2.14.1+cu130", "params_total_M": 10.130092, "params_encoder_M": 6.065532, "encoder_ms_median": 1232.4182334998568, "encoder_ms_p90": 1394.633670499843, "decoder_ms_per_prompt_median": 107.36338712498159, "peak_memory_MB": 1500.56640625, "cuda_peak_MB": null, "images": 199, "objects": 1620, "timed_images": 196}
+{'box_iou': 0.7353, 'box_dice': 0.8318, 'box_biou': 0.657, 'box_oracle_iou': 0.7767, 'click_iou': 0.5352, 'click_dice': 0.6427, 'click_biou': 0.4647, 'click_oracle_iou': 0.6866}

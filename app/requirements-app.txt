@@ -1,0 +1,7 @@
+# Streamlit demo (app/). Install with:  pip install -r app/requirements-app.txt
+streamlit==1.67.0
+streamlit-image-coordinates==0.4.1
+torch
+numpy
+pillow
+pycocotools          # imported by repro/common.py

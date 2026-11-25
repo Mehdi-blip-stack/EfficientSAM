@@ -1,0 +1,5 @@
+data/
+runs/
+*.npz
+!app/weights/*.npz
+__pycache__/

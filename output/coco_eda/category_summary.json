@@ -1,0 +1,223 @@
+{
+  "category_comparison": [
+    {
+      "category": "person",
+      "full_percent": 30.519150559127258,
+      "subset_percent": 31.592292089249494
+    },
+    {
+      "category": "car",
+      "full_percent": 5.1008080223162535,
+      "subset_percent": 5.290736984448952
+    },
+    {
+      "category": "chair",
+      "full_percent": 4.4756924701250345,
+      "subset_percent": 4.259634888438134
+    },
+    {
+      "category": "book",
+      "full_percent": 2.8738338676350375,
+      "subset_percent": 2.535496957403651
+    },
+    {
+      "category": "bottle",
+      "full_percent": 2.8304618250443894,
+      "subset_percent": 3.160919540229885
+    },
+    {
+      "category": "cup",
+      "full_percent": 2.4011599986511643,
+      "subset_percent": 2.4171737660581476
+    },
+    {
+      "category": "dining table",
+      "full_percent": 1.8272071776660725,
+      "subset_percent": 1.656524678837052
+    },
+    {
+      "category": "bowl",
+      "full_percent": 1.6695329424035554,
+      "subset_percent": 1.4874915483434754
+    },
+    {
+      "category": "traffic light",
+      "full_percent": 1.4981377928630315,
+      "subset_percent": 1.6903313049357673
+    },
+    {
+      "category": "handbag",
+      "full_percent": 1.436509957546561,
+      "subset_percent": 1.5889114266396214
+    }
+  ],
+  "full_training_annotations": 860001,
+  "visual_sources": [
+    {
+      "id": 458424,
+      "source": "http://farm3.staticflickr.com/2784/4123723564_47ce7cb930_z.jpg",
+      "license": "http://creativecommons.org/licenses/by-nc-nd/2.0/"
+    },
+    {
+      "id": 454495,
+      "source": "http://farm7.staticflickr.com/6184/6082882896_e01b39e1e9_z.jpg",
+      "license": "http://creativecommons.org/licenses/by-nc-sa/2.0/"
+    },
+    {
+      "id": 252625,
+      "source": "http://farm1.staticflickr.com/46/188068269_52967f417f_z.jpg",
+      "license": "http://creativecommons.org/licenses/by-nc-nd/2.0/"
+    }
+  ],
+  "images": 800,
+  "annotations": 5916,
+  "width_range": [
+    300,
+    640
+  ],
+  "height_range": [
+    200,
+    640
+  ],
+  "aspect_ratio_range": [
+    0.5203125,
+    2.831858407079646
+  ],
+  "photo_shapes": {
+    "portrait": 183,
+    "square": 35,
+    "landscape": 582
+  },
+  "coverage_example": {
+    "category": "dog",
+    "image_id": 458424,
+    "file_name": "000000458424.jpg",
+    "source": "http://farm3.staticflickr.com/2784/4123723564_47ce7cb930_z.jpg",
+    "width": 640,
+    "height": 480,
+    "annotation_area": 142495.7786,
+    "percent": 46.385344596354166
+  },
+  "truck_anomaly": {
+    "annotation_id": 397929,
+    "image_id": 475754,
+    "source": "http://farm3.staticflickr.com/2680/4465762706_ee94b80f00_z.jpg",
+    "stored_area": 336338.7227,
+    "union_area": 241673,
+    "polygon_areas": [
+      241673,
+      94666
+    ]
+  },
+  "decoded_training_masks": {
+    "count": 5916,
+    "failures": [],
+    "empty_masks": 0,
+    "minimum_percent": 0.00036678403755868543,
+    "maximum_percent": 98.23733333333334,
+    "median_percent": 0.6375255245613023
+  },
+  "observed_categories": 79,
+  "top_categories": [
+    [
+      "person",
+      1869
+    ],
+    [
+      "car",
+      313
+    ],
+    [
+      "chair",
+      252
+    ],
+    [
+      "bottle",
+      187
+    ],
+    [
+      "book",
+      150
+    ],
+    [
+      "cup",
+      143
+    ],
+    [
+      "traffic light",
+      100
+    ],
+    [
+      "dining table",
+      98
+    ],
+    [
+      "handbag",
+      94
+    ],
+    [
+      "bird",
+      89
+    ]
+  ],
+  "rarest_categories": [
+    [
+      "toothbrush",
+      0
+    ],
+    [
+      "toaster",
+      1
+    ],
+    [
+      "microwave",
+      3
+    ],
+    [
+      "hair drier",
+      3
+    ],
+    [
+      "hot dog",
+      9
+    ],
+    [
+      "teddy bear",
+      9
+    ],
+    [
+      "stop sign",
+      14
+    ],
+    [
+      "bear",
+      14
+    ],
+    [
+      "broccoli",
+      14
+    ],
+    [
+      "snowboard",
+      15
+    ]
+  ],
+  "absent_categories": [
+    "toothbrush"
+  ],
+  "evaluation_observed_categories": 76,
+  "shared_image_ids": [],
+  "evaluation_mask_check": {
+    "annotations": 1642,
+    "failures": [],
+    "empty": 0
+  },
+  "evaluation_absent_categories": [
+    "fire hydrant",
+    "bear",
+    "snowboard",
+    "toaster"
+  ],
+  "person_share": 0.3159229208924949,
+  "crowd_annotations": 73
+}

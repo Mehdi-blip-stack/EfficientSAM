@@ -1,0 +1,17 @@
+{
+ "model": "ours_mae_frozen",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 10.223204,
+ "params_encoder_M": 6.16384,
+ "encoder_ms_median": 10.9427705001508,
+ "encoder_ms_p90": 15.60481950036774,
+ "decoder_ms_per_prompt_median": 2.1045708750307313,
+ "peak_memory_MB": 1551.32421875,
+ "cuda_peak_MB": 143.14990234375,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}

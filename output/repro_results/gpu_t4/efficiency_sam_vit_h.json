@@ -1,0 +1,17 @@
+{
+ "model": "sam_vit_h",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 641.090608,
+ "params_encoder_M": 637.026048,
+ "encoder_ms_median": 2180.915439000046,
+ "encoder_ms_p90": 2208.6810589999573,
+ "decoder_ms_per_prompt_median": 4.867359900012096,
+ "peak_memory_MB": 5561.94921875,
+ "cuda_peak_MB": 5739.20751953125,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}

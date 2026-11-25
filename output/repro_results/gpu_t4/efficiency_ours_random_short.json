@@ -1,0 +1,17 @@
+{
+ "model": "ours_random_short",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 10.223204,
+ "params_encoder_M": 6.16384,
+ "encoder_ms_median": 11.662620500374032,
+ "encoder_ms_p90": 16.289020999920467,
+ "decoder_ms_per_prompt_median": 2.333563333422717,
+ "peak_memory_MB": 1563.34375,
+ "cuda_peak_MB": 143.14990234375,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}

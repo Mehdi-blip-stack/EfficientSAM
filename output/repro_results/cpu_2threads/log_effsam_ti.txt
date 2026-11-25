@@ -1,0 +1,13 @@
+loading annotations into memory...
+Done (t=0.02s)
+creating index...
+index created!
+  effsam_ti: 25/199 images, 140s
+  effsam_ti: 50/199 images, 267s
+  effsam_ti: 75/199 images, 400s
+  effsam_ti: 100/199 images, 543s
+  effsam_ti: 125/199 images, 688s
+  effsam_ti: 150/199 images, 839s
+  effsam_ti: 175/199 images, 982s
+{"model": "effsam_ti", "device": "cpu", "cpu": "x86_64", "threads": 2, "torch": "2.14.1+cu130", "params_total_M": 10.223204, "params_encoder_M": 6.16384, "encoder_ms_median": 3762.983350000013, "encoder_ms_p90": 3926.419017500052, "decoder_ms_per_prompt_median": 96.6351394999947, "peak_memory_MB": 1483.3046875, "cuda_peak_MB": null, "images": 199, "objects": 1620, "timed_images": 196}
+{'box_iou': 0.7509, 'box_dice': 0.8442, 'box_biou': 0.671, 'box_oracle_iou': 0.788, 'click_iou': 0.5006, 'click_dice': 0.614, 'click_biou': 0.4405, 'click_oracle_iou': 0.6809}

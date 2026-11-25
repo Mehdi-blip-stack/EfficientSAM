@@ -1,0 +1,10 @@
+# Reproduction code (repro/). Tested on Google Colab with torch 2.14.1 (CUDA) and on CPU.
+torch
+torchvision
+numpy
+scipy
+pillow
+matplotlib
+pycocotools
+segment-anything @ git+https://github.com/facebookresearch/segment-anything.git
+mobile_sam @ git+https://github.com/ChaoningZhang/MobileSAM.git

@@ -1,0 +1,15 @@
+loading annotations into memory...
+Done (t=0.02s)
+creating index...
+index created!
+images=199 objects=1620 dropped={'crowd': 22, 'tiny': 0, 'empty_images': 1} -> /content/drive/MyDrive/effsam_work/results/gpu_t4/eval_prompts.json
+already done: ours_sami
+already done: ours_mae
+already done: ours_random
+already done: effsam_ti
+already done: effsam_s
+already done: mobile_sam
+already done: sam_vit_b
+===== sam_vit_h
+{"model": "sam_vit_h", "device": "cuda", "cpu": "x86_64", "threads": 1, "torch": "2.14.1+cu130", "params_total_M": 641.090608, "params_encoder_M": 637.026048, "encoder_ms_median": 2180.915439000046, "encoder_ms_p90": 2208.6810589999573, "decoder_ms_per_prompt_median": 4.867359900012096, "peak_memory_MB": 5561.94921875, "cuda_peak_MB": 5739.20751953125, "images": 199, "objects": 1620, "timed_images": 196}
+{'box_iou': 0.7796, 'box_dice': 0.8642, 'box_biou': 0.7085, 'box_oracle_iou': 0.8087, 'click_iou': 0.5913, 'click_dice': 0.6912, 'click_biou': 0.5252, 'click_oracle_iou': 0.7486}

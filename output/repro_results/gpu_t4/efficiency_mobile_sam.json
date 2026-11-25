@@ -1,0 +1,17 @@
+{
+ "model": "mobile_sam",
+ "device": "cuda",
+ "cpu": "x86_64",
+ "threads": 1,
+ "torch": "2.14.1+cu130",
+ "params_total_M": 10.130092,
+ "params_encoder_M": 6.065532,
+ "encoder_ms_median": 60.92827700103953,
+ "encoder_ms_p90": 69.77557849950244,
+ "decoder_ms_per_prompt_median": 5.131230249844521,
+ "peak_memory_MB": 1905.7890625,
+ "cuda_peak_MB": 573.681640625,
+ "images": 199,
+ "objects": 1620,
+ "timed_images": 196
+}
