@@ -28,8 +28,10 @@ can see it.
 
 ## 2. Add the model weights
 * **Our trained models:** download them from the GitHub releases and copy them into `app/weights/`:
+  * **[v1.3-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.3-weights)**:
+    `SAMI_finetuned_100k.pt`, fine-tuned on 100,000 images for 5 epochs: **our best model**, listed first in the app
   * **[v1.2-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.2-weights)**:
-    `SAMI_finetuned_5k_e100.pt`, fine-tuned on 5,000 images for 100 epochs: **our best model**, listed first in the app
+    `SAMI_finetuned_5k_e100.pt`, fine-tuned on 5,000 images for 100 epochs
   * **[v1.1-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.1-weights)**:
     `SAMI_finetuned_5k.pt`, fine-tuned on 5,000 images for 16 epochs
   * **[v1.0-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.0-weights)**:

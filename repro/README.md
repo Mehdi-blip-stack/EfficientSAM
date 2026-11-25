@@ -56,7 +56,8 @@ three environment variables: `COCO_DATA_ROOT` (our COCO subset), `REPRO_OUT` (re
 | D: fewer labels | 100 labelled images | 0.151 / 0.101 | 0.159 / 0.105 | 0.190 / 0.110 |
 | D: fewer labels | 200 labelled images | 0.241 / 0.140 | 0.243 / 0.139 | 0.275 / 0.144 |
 | E: more data | 5,000 images, 16 epochs | 0.577 / 0.313 | 0.571 / 0.308 | 0.568 / 0.297 |
-| F: longer training | 5,000 images, 100 epochs | **0.611 / 0.341** | 0.612 / 0.348 | 0.613 / 0.346 |
+| F: longer training | 5,000 images, 100 epochs | 0.611 / 0.341 | 0.612 / 0.348 | 0.613 / 0.346 |
+| G: more variety | 100,000 images, 5 epochs | **0.627 / 0.369** | not finished | 0.629 / 0.360 |
 
 Key findings:
 * With the encoder **frozen**, SAMI beats MAE on single clicks by +0.031 [95% CI +0.019, +0.043]; full fine-tuning
@@ -72,8 +73,10 @@ Full tables, confidence intervals and timings: `output/repro_results/gpu_t4/resu
 
 ## Trained weights
 Checkpoints are not stored in git (≈40 MB each). Download them from the GitHub releases:
+* **[v1.3-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.3-weights)**:
+  `SAMI_finetuned_100k.pt`, SAMI-pretrained encoder fine-tuned on 100,000 images for 5 epochs (`checkpoints/ft_sami_100k`), **our best model**
 * **[v1.2-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.2-weights)**:
-  `SAMI_finetuned_5k_e100.pt`, SAMI-pretrained encoder fine-tuned on 5,000 images for 100 epochs (`checkpoints/ft_sami_5k_e100`), **our best model**
+  `SAMI_finetuned_5k_e100.pt`, SAMI-pretrained encoder fine-tuned on 5,000 images for 100 epochs (`checkpoints/ft_sami_5k_e100`)
 * **[v1.1-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.1-weights)**:
   `SAMI_finetuned_5k.pt`, SAMI-pretrained encoder fine-tuned on 5,000 images for 16 epochs (`checkpoints/ft_sami_5k`)
 * **[v1.0-weights](https://github.com/Mehdi-blip-stack/EfficientSAM/releases/tag/v1.0-weights)**:
@@ -97,6 +100,9 @@ model.eval()   # input: RGB image resized to 256x256, values in [0, 1]
 * Experiment D: `--limit` documented and `--save_every` added to `finetune.py` (saving every epoch is the default,
   so earlier runs are unaffected); run names `*_n100`, `*_n200`.
 * Experiment E: `prepare_5k.py` added; run names `*_5k`.
+* Experiment G: run names `*_100k`. `prepare_100k.py` builds the 100,000-image set on disk (images streamed at
+  256 px, masks bit-packed); `finetune.py --large` reads one batch at a time and `--save_steps N` saves and resumes
+  inside an epoch; `--warmup` accepts fractions of an epoch. Notebook: `notebooks/Experiment_G.ipynb`.
 * Experiment F: run names `*_5k_e100`. Fixed resuming in `finetune.py`: the saved random-generator state is moved
   back to the CPU before it is restored (`gen.set_state(s["gen"].cpu())`); before, resuming on a GPU failed with
   "RNG state must be a torch.ByteTensor". It does not change results. `summarize_results.py` now skips models

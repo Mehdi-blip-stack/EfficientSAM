@@ -36,9 +36,9 @@ class Prediction:
 
 
 def available_models():
-    """Our fine-tuned checkpoints in app/weights/*.pt first (the 5,000-image, 100-epoch model, our best, at the top),
+    """Our fine-tuned checkpoints in app/weights/*.pt first (the 100,000-image model, our best, at the top),
     then the released EfficientSAM models."""
-    ours = sorted(OURS_DIR.glob("*.pt"), key=lambda p: (0 if "e100" in p.stem else 1 if "5k" in p.stem else 2, p.stem))
+    ours = sorted(OURS_DIR.glob("*.pt"), key=lambda p: (0 if "100k" in p.stem else 1 if "e100" in p.stem else 2 if "5k" in p.stem else 3, p.stem))
     models = {f"Ours: {p.stem}": ("ours", p) for p in ours}
     for name, (fname, _, _) in RELEASED.items():
         w = REPO / "weights" / fname

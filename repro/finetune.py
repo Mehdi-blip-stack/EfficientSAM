@@ -10,14 +10,20 @@ Loss    : SAM recipe -- 20 x focal + Dice on the best of the 3 predicted masks, 
           and the true IoU of every mask. ADAPTED from our team's from_scratch/tinysam/torch_impl/losses.py
           (vectorised and extended with a padding mask).
 Written by our team. Saves every epoch to --out and resumes automatically.
+--large (Experiment G, 100,000 images from prepare_100k.py): images and masks stay on disk and only the current
+batch is read; the mirrored view is made by flipping (identical pixels to the stored mirrors of the other sets).
+--save_steps N additionally saves every N steps inside an epoch and resumes from that exact step (same batch order
+and random state), so a disconnect costs at most N steps; useful when one epoch takes ~45 minutes.
 
 Usage:  python -m repro.finetune --init sami   --encoder .../checkpoints/sami/encoder_final.pt --out .../checkpoints/ft_sami
         python -m repro.finetune --init mae    --encoder .../checkpoints/mae/encoder_final.pt  --out .../checkpoints/ft_mae
         python -m repro.finetune --init random --out .../checkpoints/ft_random
 """
 import argparse
+import hashlib
 import json
 import math
+import os
 import time
 from pathlib import Path
 
@@ -107,7 +113,7 @@ def main():
     ap.add_argument("--features", required=True, help="folder with student_inputs_256.npy (step B2)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--epochs", type=int, default=100)
-    ap.add_argument("--warmup", type=int, default=5)
+    ap.add_argument("--warmup", type=float, default=5, help="warm-up length in epochs (may be a fraction)")
     ap.add_argument("--batch", type=int, default=8)
     ap.add_argument("--max_objects", type=int, default=16)
     ap.add_argument("--lr_encoder", type=float, default=1e-4)
@@ -115,6 +121,8 @@ def main():
     ap.add_argument("--seed", type=int, default=36219)
     ap.add_argument("--limit", type=int, default=0, help="use only the first N training images (and their masks)")
     ap.add_argument("--save_every", type=int, default=1, help="save the resume checkpoint every N epochs")
+    ap.add_argument("--save_steps", type=int, default=0, help="also save every N steps inside an epoch (0 = off)")
+    ap.add_argument("--large", action="store_true", help="read the prepare_100k.py arrays from disk (Experiment G)")
     ap.add_argument("--freeze_encoder", action="store_true",
                     help="keep the pretrained patch embedding + ViT blocks fixed; train only the neck, prompt encoder "
                          "and mask decoder. Tests the quality of the pretrained FEATURES themselves.")
@@ -124,14 +132,40 @@ def main():
     out = Path(args.out); out.mkdir(parents=True, exist_ok=True)
     feats = Path(args.features)
 
-    cache = feats / ("finetune_targets_256.npz" if not args.limit else f"finetune_targets_256_limit{args.limit}.npz")
-    if not cache.exists():
-        build_targets(feats, cache, args.limit)
-    z = np.load(cache)
-    rows = torch.from_numpy(z["rows"]); n_img = len(z["image_ids"])
-    masks = torch.from_numpy(np.unpackbits(z["masks"], axis=1)[:, : S * S].reshape(-1, S, S).astype(bool))
-    inputs = torch.from_numpy(np.load(feats / "student_inputs_256.npy")[:n_img])     # N,2,3,S,S uint8
-    by_img = [torch.where(rows[:, 0] == i)[0] for i in range(n_img)]
+    data_fp = None
+    if args.large:
+        assert not args.freeze_encoder and not args.limit, "--large supports full fine-tuning only"
+        info = json.load(open(feats / "prepare_100k_info.json")); data_fp = info["fingerprint"]
+        rows = torch.from_numpy(np.load(feats / "targets_rows.npy")); n_img = info["images"]
+        packed_mm = np.load(feats / "targets_masks.npy", mmap_mode="r")
+        inputs_mm = np.load(feats / "student_inputs_256_single.npy", mmap_mode="r")   # N,3,S,S uint8 on disk
+        r0 = rows[:, 0].numpy()
+        lo = np.searchsorted(r0, np.arange(n_img)); hi = np.searchsorted(r0, np.arange(n_img), side="right")
+        by_img = [torch.arange(a, b) for a, b in zip(lo, hi)]
+
+        def get_masks(objs):
+            p = packed_mm[objs.numpy()]
+            return torch.from_numpy(np.unpackbits(p, axis=1)[:, : S * S].reshape(-1, S, S).astype(bool))
+
+        def get_image(i, view):
+            x = torch.from_numpy(np.array(inputs_mm[i]))
+            return x.flip(-1) if view else x
+        print(f"large data set: {n_img} images, {len(rows)} objects, fingerprint {data_fp}")
+    else:
+        cache = feats / ("finetune_targets_256.npz" if not args.limit else f"finetune_targets_256_limit{args.limit}.npz")
+        if not cache.exists():
+            build_targets(feats, cache, args.limit)
+        z = np.load(cache)
+        rows = torch.from_numpy(z["rows"]); n_img = len(z["image_ids"])
+        masks = torch.from_numpy(np.unpackbits(z["masks"], axis=1)[:, : S * S].reshape(-1, S, S).astype(bool))
+        inputs = torch.from_numpy(np.load(feats / "student_inputs_256.npy")[:n_img])     # N,2,3,S,S uint8
+        by_img = [torch.where(rows[:, 0] == i)[0] for i in range(n_img)]
+
+        def get_masks(objs):
+            return masks[objs]
+
+        def get_image(i, view):
+            return inputs[i, view]
     img_list = [i for i in range(n_img) if len(by_img[i])]
 
     model = build_student_sam().to(dev)
@@ -165,23 +199,44 @@ def main():
     groups = [{"params": other, "lr": args.lr_decoder}] + ([{"params": enc_params, "lr": args.lr_encoder}] if enc_params else [])
     opt = torch.optim.AdamW(groups, weight_decay=0.05)
     steps_per_epoch = math.ceil(len(img_list) / args.batch); total = args.epochs * steps_per_epoch
-    warm = args.warmup * steps_per_epoch
+    warm = max(1, int(round(args.warmup * steps_per_epoch)))
     sched = torch.optim.lr_scheduler.LambdaLR(opt, lambda s: (s + 1) / warm if s < warm else 0.5 * (1 + math.cos(math.pi * (s - warm) / max(1, total - warm))))
     scaler = torch.amp.GradScaler("cuda", enabled=dev == "cuda")
     gen = torch.Generator().manual_seed(args.seed)
 
     start, log, ck = 0, [], out / "last.pt"
+    mid = None                                         # (order, next batch start, losses, seconds) of an unfinished epoch
     if ck.exists():
         s = torch.load(ck, map_location=dev)
+        if data_fp is not None:
+            assert s.get("data_fp") == data_fp, (f"checkpoint was trained on different data ({s.get('data_fp')} vs "
+                                                 f"{data_fp}): prepare the data with the same script and seed")
         model.load_state_dict(s["model"]); opt.load_state_dict(s["opt"]); sched.load_state_dict(s["sched"])
-        scaler.load_state_dict(s["scaler"]); start, log = s["epoch"] + 1, s["log"]; gen.set_state(s["gen"].cpu())
-        print(f"resumed from epoch {start}")
+        scaler.load_state_dict(s["scaler"]); log = s["log"]; gen.set_state(s["gen"].cpu())
+        if s.get("next_st") is not None:
+            start = s["epoch_in_progress"]; mid = (s["order"], s["next_st"], s["L"], s["ML"], s["sec"])
+            print(f"resumed inside epoch {start + 1}, at batch start {s['next_st']}/{len(img_list)}")
+        else:
+            start = s["epoch"] + 1
+            print(f"resumed from epoch {start}")
 
+    def save(state):
+        tmp = out / "last.pt.tmp"                     # write fully, then rename: a disconnect never leaves a broken file
+        torch.save(state, tmp); os.replace(tmp, ck)
+
+    def state(**extra):
+        return {"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "scaler": scaler.state_dict(),
+                "log": log, "gen": gen.get_state(), "args": vars(args), "data_fp": data_fp, **extra}
+
+    step = 0
     for epoch in range(start, args.epochs):
         model.train(); t0 = time.time(); L, ML = [], []
         views = []
-        order = torch.randperm(len(img_list), generator=gen)
-        for st in range(0, len(img_list), args.batch):
+        if mid is not None:
+            order, st0, L, ML, sec0 = mid; t0 -= sec0; mid = None
+        else:
+            order = torch.randperm(len(img_list), generator=gen); st0 = 0
+        for st in range(st0, len(img_list), args.batch):
             imgs, P, Lb, T, V = [], [], [], [], []
             batch = [img_list[j] for j in order[st:st + args.batch]]
             Q = min(args.max_objects, max(len(by_img[i]) for i in batch))
@@ -189,13 +244,13 @@ def main():
                 objs = by_img[i]
                 if len(objs) > Q:
                     objs = objs[torch.randperm(len(objs), generator=gen)[:Q]]
-                m = masks[objs]; b = rows[objs, 1:].clone()
+                m = get_masks(objs); b = rows[objs, 1:].clone()
                 view = int(torch.rand(1, generator=gen) < 0.5)                   # random mirror (view 1)
                 if view:
                     m = m.flip(-1); b = torch.stack([S - b[:, 2], b[:, 1], S - b[:, 0], b[:, 3]], 1)
                 p, l = make_prompts(b, m, gen)
                 k = len(objs); pad = Q - k
-                imgs.append(inputs[i, view]); views.append((i, view))
+                imgs.append(get_image(i, view)); views.append((i, view))
                 P.append(torch.cat([p, torch.full((pad, 2, 2), -1.0)])); Lb.append(torch.cat([l, torch.full((pad, 2), -1.0)]))
                 T.append(torch.cat([m.float(), torch.zeros(pad, S, S)])); V.append(torch.arange(Q) < k)
             x = None if tokens is not None else torch.stack(imgs).to(dev).float() / 255
@@ -214,15 +269,21 @@ def main():
             torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad], 1.0)
             scaler.step(opt); scaler.update(); sched.step()
             L.append(loss.item()); ML.append(mloss.item())
+            step += 1
+            if args.save_steps and step % args.save_steps == 0 and st + args.batch < len(img_list):
+                save(state(epoch_in_progress=epoch, next_st=st + args.batch, order=order, L=L, ML=ML, sec=time.time() - t0))
+                print(f"[ft-{args.init}] epoch {epoch + 1}/{args.epochs} batch {(st + args.batch) // args.batch}/"
+                      f"{math.ceil(len(img_list) / args.batch)} loss {np.mean(L[-args.save_steps:]):.4f} "
+                      f"({time.time() - t0:.0f}s into the epoch) saved", flush=True)
         log.append({"epoch": epoch, "loss": float(np.mean(L)), "mask_loss": float(np.mean(ML)), "sec": time.time() - t0})
         if (epoch + 1) % args.save_every == 0 or epoch == args.epochs - 1:
-            torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "scaler": scaler.state_dict(),
-                        "epoch": epoch, "log": log, "gen": gen.get_state(), "args": vars(args)}, ck)
-        if epoch % max(5, args.epochs // 20) == 0 or epoch == args.epochs - 1:
+            save(state(epoch=epoch, next_st=None))
+        if epoch % max(5, args.epochs // 20) == 0 or epoch == args.epochs - 1 or args.save_steps:
             print(f"[ft-{args.init}{'-frozen' if args.freeze_encoder else ''}] epoch {epoch + 1}/{args.epochs} loss {log[-1]['loss']:.4f} "
                   f"(mask {log[-1]['mask_loss']:.4f}) {log[-1]['sec']:.1f}s/epoch", flush=True)
 
-    torch.save({"model": model.state_dict(), "init": args.init, "log": log, "args": vars(args)}, out / "model_final.pt")
+    torch.save({"model": model.state_dict(), "init": args.init, "log": log, "args": vars(args)}, out / "model_final.pt.tmp")
+    os.replace(out / "model_final.pt.tmp", out / "model_final.pt")
     json.dump(log, open(out / "finetune_log.json", "w"))
     print("saved", out / "model_final.pt")
 
